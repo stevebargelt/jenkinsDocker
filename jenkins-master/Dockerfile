@@ -24,7 +24,7 @@ ENV JENKINS_SHA f822e70810e0d30c6fbe7935273635740faa3d89
 ENV JENKINS_UC https://updates.jenkins-ci.io 
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ENV JAVA_OPTS="-Xmx8192m"
-ENV JENKINS_OPTS="--handlerCountStartup=100 --handlerCountMax=300 --logfile=/var/log/jenkins/jenkins.log  --webroot=/var/cache/jenkins/war"
+ENV JENKINS_OPTS="--logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war"
 
 ARG user=jenkins
 ARG group=jenkins
