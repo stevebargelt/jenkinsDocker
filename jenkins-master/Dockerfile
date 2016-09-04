@@ -74,10 +74,6 @@ RUN chown -R ${user}:${group} /var/cache/jenkins
 EXPOSE 8080
 EXPOSE 50000
 
-
-# Switch to the jenkins user
-USER ${user}
-
 # Copy in local config files and set proper permissions
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
@@ -99,13 +95,16 @@ RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
 RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
 RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 
+# Switch to the jenkins user
+USER ${user}
+
 # Tini as the entry point to manage zombie processes
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
 # Install default plugins
-#COPY plugins.txt /tmp/plugins.txt
-#RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
+COPY plugins.txt /tmp/plugins.txt
+RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
 
-RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
+#RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
 #RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
 
