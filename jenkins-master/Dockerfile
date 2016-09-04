@@ -1,6 +1,8 @@
 FROM gliderlabs/alpine:3.4
 MAINTAINER Steve Bargelt
 
+## Official Jenkins build on openjdk:8-jdk file... this copied from that Dockerfile
+
 # Default to UTF-8 file.encoding
 ENV LANG C.UTF-8
 
@@ -26,18 +28,9 @@ RUN set -x \
 
 ## END of openjdk:8-jdk file
 
-RUN apk add openssh-client unzip unzip wget  
-
-# RUN yum makecache \
-#     && yum update -y \
-#     && yum install -y \
-#     wget \
-#     zip \
-#     openssh-client \
-#     unzip \
-#     java-1.8.0-openjdk \
-#     && yum clean all
-
+RUN apk update &&\
+    apk upgrade &&\
+    apk add openssh git curl zip   
 
 # SET Jenkins Environment Variables
 ENV JENKINS_HOME /var/jenkins_home
@@ -49,16 +42,18 @@ ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ENV JAVA_OPTS="-Xmx8192m"
 ENV JENKINS_OPTS="--logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war"
 
-ARG user=jenkins
-ARG group=jenkins
+ARG JENKINS_USER=jenkins
+ARG JENKINS_GROUP=jenkins
 ARG uid=1000
 ARG gid=1000
 
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
-RUN groupadd -g ${gid} ${group} \
-    && useradd -d "$JENKINS_HOME" -u ${uid} -g ${gid} -m -s /bin/bash ${user}
+RUN addgroup ${JENKINS_GROUP} &&\
+    adduser -h ${JENKINS_HOME} -D -s /bin/bash -G ${JENKINS_GROUP} ${JENKINS_USER} 
+
+# for plugins in credentials ssh-credentials ssh-agent ssh-slaves git-client git github github-api github-oauth ghprb scm-api postbuild-task greenballs; do  curl -sSL http://updates.jenkins-ci.org/latest/${plugins}.hpi --output $JENKINS_VOL/${plugins}.hpi; done
 
 # Jenkins home directory is a volume, so configuration and build history
 # can be persisted and survive image upgrades
@@ -87,11 +82,11 @@ ARG JENKINS_URL=http://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-wa
 RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha1sum -c -
 
 # Prep Jenkins Directories
-RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
+RUN chown -R ${JENKINS_USER} "$JENKINS_HOME" /usr/share/jenkins/ref
 RUN mkdir /var/log/jenkins
 RUN mkdir /var/cache/jenkins
-RUN chown -R ${user}:${group} /var/log/jenkins
-RUN chown -R ${user}:${group} /var/cache/jenkins
+RUN chown -R ${JENKINS_USER}:${JENKINS_GROUP} /var/log/jenkins
+RUN chown -R ${JENKINS_USER}:${JENKINS_GROUP} /var/cache/jenkins
 
 # Expose Ports for web and slave agents
 EXPOSE 8080
@@ -119,14 +114,14 @@ RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
 RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 
 # Switch to the jenkins user
-USER ${user}
+USER ${JENKINS_USER}
 
 # Tini as the entry point to manage zombie processes
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
 # Install default plugins
-COPY plugins.txt /tmp/plugins.txt
-RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
+# COPY plugins.txt /tmp/plugins.txt
+# RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
 
 #RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
 #RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
