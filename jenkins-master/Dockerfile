@@ -98,12 +98,13 @@ RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 # Switch to the jenkins user
 USER ${user}
 
-# Tini as the entry point to manage zombie processes
-ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
-
 # Install default plugins
 COPY plugins.txt /tmp/plugins.txt
 RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
+
+# Tini as the entry point to manage zombie processes
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+
 
 #RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
 #RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
