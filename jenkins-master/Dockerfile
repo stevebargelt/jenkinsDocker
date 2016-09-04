@@ -69,14 +69,16 @@ EXPOSE 50000
 COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
+COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/jenkins-support
+RUN chmod +x /usr/local/bin/plugins.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/jenkins.sh
 
 # Install default plugins
-#COPY plugins.txt /tmp/plugins.txt
-#RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
+COPY plugins.txt /tmp/plugins.txt
+RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
 #RUN /usr/local/bin/install-plugins.sh jclouds-jenkins
 #RUN /usr/local/bin/install-plugins.sh token-macro
 #RUN /usr/local/bin/install-plugins.sh durable-task

@@ -1,4 +1,2 @@
 jclouds-jenkins
-token-macro
-durable-task
 yet-another-docker-plugin
