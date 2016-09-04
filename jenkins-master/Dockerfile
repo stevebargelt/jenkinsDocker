@@ -1,19 +1,42 @@
-FROM centos:7
+FROM gliderlabs/alpine:3.4
 MAINTAINER Steve Bargelt
 
-# see https://bugs.debian.org/775775
-# and https://github.com/docker-library/java/issues/19#issuecomment-70546872
-ENV CA_CERTIFICATES_JAVA_VERSION 20140324
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
 
-RUN yum makecache \
-    && yum update -y \
-    && yum install -y \
-    wget \
-    zip \
-    openssh-client \
-    unzip \
-    java-1.8.0-openjdk \
-    && yum clean all
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
+ENV JAVA_HOME /usr/lib/jvm/java-1.8-openjdk
+ENV PATH $PATH:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin
+
+ENV JAVA_VERSION 8u92
+ENV JAVA_ALPINE_VERSION 8.92.14-r1
+
+RUN set -x \
+	&& apk add --no-cache \
+		openjdk8="$JAVA_ALPINE_VERSION" \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
+
+## END of openjdk:8-jdk file
+
+RUN apk add openssh-client unzip unzip wget  
+
+# RUN yum makecache \
+#     && yum update -y \
+#     && yum install -y \
+#     wget \
+#     zip \
+#     openssh-client \
+#     unzip \
+#     java-1.8.0-openjdk \
+#     && yum clean all
 
 
 # SET Jenkins Environment Variables
@@ -98,13 +121,12 @@ RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 # Switch to the jenkins user
 USER ${user}
 
-# Install default plugins
-COPY plugins.txt /tmp/plugins.txt
-RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
-
 # Tini as the entry point to manage zombie processes
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
+# Install default plugins
+COPY plugins.txt /tmp/plugins.txt
+RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
 
 #RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
 #RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
