@@ -1,21 +1,30 @@
-FROM centos:7
-MAINTAINER Steve Bargelt
+FROM debian:jessie
+MAINTAINER Maxfield Stewart
+
+# Install all dependencies
+RUN echo 'deb http://httpredir.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list
+
+ENV LANG C.UTF-8
+ENV JAVA_VERSION 8u91
+ENV JAVA_DEBIAN_VERSION 8u91-b14-1~bpo8+1
 
 # see https://bugs.debian.org/775775
 # and https://github.com/docker-library/java/issues/19#issuecomment-70546872
 ENV CA_CERTIFICATES_JAVA_VERSION 20140324
 
-RUN yum makecache \
-    && yum update -y \
-    && yum install -y \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
     wget \
+    curl \
+    ca-certificates \
     zip \
     openssh-client \
     unzip \
-    java-1.8.0-openjdk \
-    && yum clean all
+    openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
+    ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
+    && rm -rf /var/lib/apt/lists/*
     
-#RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
 
 # Install Tini
 ENV TINI_SHA 066ad710107dc7ee05d3aa6e4974f01dc98f3888
@@ -63,33 +72,12 @@ RUN chown -R jenkins:jenkins /var/cache/jenkins
 EXPOSE 8080
 EXPOSE 50000
 
-# Copy in local config files and set proper permissions
+# Copy in local config filesfiles
 COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 COPY jenkins.sh /usr/local/bin/jenkins.sh
-COPY jenkins-support /usr/local/bin/jenkins-support
-COPY install-plugins.sh /usr/local/bin/install-plugins.sh
-RUN chmod +x /usr/local/bin/jenkins-support
-RUN chmod +x /usr/local/bin/install-plugins.sh
+COPY plugins.sh /usr/local/bin/plugins.sh
+RUN chmod +x /usr/local/bin/plugins.sh
 RUN chmod +x /usr/local/bin/jenkins.sh
-
-# Install default plugins
-#COPY plugins.txt /tmp/plugins.txt
-#RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
-#RUN /usr/local/bin/install-plugins.sh jclouds-jenkins
-#RUN /usr/local/bin/install-plugins.sh token-macro
-#RUN /usr/local/bin/install-plugins.sh durable-task
-#RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
-
-# Copy in the Docker certs, we'll use /usr/local/etc for them
-COPY certs/ca-key.pem /usr/local/etc/jenkins/certs/ca-key.pem
-COPY certs/ca.pem /usr/local/etc/jenkins/certs/ca.pem
-COPY certs/cert.pem /usr/local/etc/jenkins/certs/cert.pem
-COPY certs/key.pem /usr/local/etc/jenkins/certs/key.pem
-
-# Make sure cert permissions are set correctly
-RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
-RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
-RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 
 # Switch to the jenkins user
 USER jenkins

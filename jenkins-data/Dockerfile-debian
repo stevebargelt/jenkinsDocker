@@ -1,5 +1,5 @@
-FROM centos:7
-MAINTAINER Steve Bargelt
+FROM debian:jessie
+MAINTAINER Maxfield Stewart
 
 # Create the jenkins user
 RUN useradd -d "/var/jenkins_home" -u 1000 -m -s /bin/bash jenkins
