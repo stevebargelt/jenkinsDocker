@@ -107,6 +107,6 @@ ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 #COPY plugins.txt /tmp/plugins.txt
 #RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
 
-#RUN /usr/local/bin/install-plugins.sh jclouds-jenkins
+RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
 #RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
 
