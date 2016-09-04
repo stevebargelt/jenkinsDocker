@@ -30,14 +30,14 @@ RUN set -x \
 
 RUN apk update &&\
     apk upgrade &&\
-    apk add openssh git curl zip   
+    apk add --no-cache git openssh-client curl zip unzip bash ttf-dejavu coreutils
 
 # SET Jenkins Environment Variables
 ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT 50000
 ENV JENKINS_VERSION 2.7.3
 ENV JENKINS_SHA f822e70810e0d30c6fbe7935273635740faa3d89
-ENV JENKINS_UC https://updates.jenkins-ci.io 
+ENV JENKINS_UC https://updates.jenkins-ci.org
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ENV JAVA_OPTS="-Xmx8192m"
 ENV JENKINS_OPTS="--logfile=/var/log/jenkins/jenkins.log --webroot=/var/cache/jenkins/war"
@@ -50,8 +50,9 @@ ARG gid=1000
 # Jenkins is run with user `jenkins`, uid = 1000
 # If you bind mount a volume from the host or a data container,
 # ensure you use the same uid
-RUN addgroup ${JENKINS_GROUP} &&\
-    adduser -h ${JENKINS_HOME} -D -s /bin/bash -G ${JENKINS_GROUP} ${JENKINS_USER} 
+RUN addgroup -g ${gid} ${JENKINS_GROUP} \
+    && adduser -h "$JENKINS_HOME" -u ${uid} -G ${JENKINS_GROUP} -s /bin/bash -D ${JENKINS_USER}
+
 
 # for plugins in credentials ssh-credentials ssh-agent ssh-slaves git-client git github github-api github-oauth ghprb scm-api postbuild-task greenballs; do  curl -sSL http://updates.jenkins-ci.org/latest/${plugins}.hpi --output $JENKINS_VOL/${plugins}.hpi; done
 
@@ -73,7 +74,6 @@ RUN curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION
 
 COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 
-
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=http://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
 
@@ -92,15 +92,13 @@ RUN chown -R ${JENKINS_USER}:${JENKINS_GROUP} /var/cache/jenkins
 EXPOSE 8080
 EXPOSE 50000
 
+# Switch to the jenkins user
+USER ${JENKINS_USER}
+
 # Copy in local config files and set proper permissions
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
-COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
-RUN chmod +x /usr/local/bin/jenkins-support
-RUN chmod +x /usr/local/bin/plugins.sh
-RUN chmod +x /usr/local/bin/install-plugins.sh
-RUN chmod +x /usr/local/bin/jenkins.sh
 
 # Copy in the Docker certs, we'll use /usr/local/etc for them
 COPY certs/ca-key.pem /usr/local/etc/jenkins/certs/ca-key.pem
@@ -108,7 +106,12 @@ COPY certs/ca.pem /usr/local/etc/jenkins/certs/ca.pem
 COPY certs/cert.pem /usr/local/etc/jenkins/certs/cert.pem
 COPY certs/key.pem /usr/local/etc/jenkins/certs/key.pem
 
+USER root
+
 # Make sure cert permissions are set correctly
+RUN chmod +x /usr/local/bin/jenkins-support
+RUN chmod +x /usr/local/bin/install-plugins.sh
+RUN chmod +x /usr/local/bin/jenkins.sh
 RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
 RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
 RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
@@ -119,10 +122,5 @@ USER ${JENKINS_USER}
 # Tini as the entry point to manage zombie processes
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
-# Install default plugins
-# COPY plugins.txt /tmp/plugins.txt
-# RUN /usr/local/bin/plugins.sh /tmp/plugins.txt
-
-#RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
-#RUN /usr/local/bin/install-plugins.sh yet-another-docker-plugin
+RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
 
