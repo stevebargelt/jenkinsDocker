@@ -75,6 +75,9 @@ EXPOSE 8080
 EXPOSE 50000
 
 
+# Switch to the jenkins user
+USER ${user}
+
 # Copy in local config files and set proper permissions
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
@@ -84,7 +87,6 @@ RUN chmod +x /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/plugins.sh
 RUN chmod +x /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/jenkins.sh
-
 
 # Copy in the Docker certs, we'll use /usr/local/etc for them
 COPY certs/ca-key.pem /usr/local/etc/jenkins/certs/ca-key.pem
@@ -96,9 +98,6 @@ COPY certs/key.pem /usr/local/etc/jenkins/certs/key.pem
 RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
 RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
 RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
-
-# Switch to the jenkins user
-USER ${user}
 
 # Tini as the entry point to manage zombie processes
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
