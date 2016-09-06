@@ -122,5 +122,5 @@ USER ${JENKINS_USER}
 # Tini as the entry point to manage zombie processes
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 
-RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin
+RUN /usr/local/bin/install-plugins.sh jclouds-jenkins yet-another-docker-plugin scriptler
 

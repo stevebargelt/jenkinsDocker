@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -eu -o pipefail
 
-DOCKER_CERTS_PATH=""
+DOCKER_CERTS_PATH="~/tlsBlog"
 DOCKERMACHINE_NAME="${DOCKERMACHINE_NAME:-default}"
 
 function is_darwin () {
