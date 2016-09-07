@@ -68,7 +68,6 @@ slaveTemplate.setMode(Node.Mode.EXCLUSIVE);
 slaveTemplate.setRetentionStrategy(new DockerOnceRetentionStrategy(5));
 slaveTemplate.setDockerContainerLifecycle(containerLifecycle);
 slaveTemplate.setNodeProperties(nodeProperties);
-//slaveTemplate.setRemoteFsMapping("/home/jenkins");
 
 def templates = myCloud.getTemplates();
 def newTemplates = new ArrayList<DockerSlaveTemplate>();
