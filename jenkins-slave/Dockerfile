@@ -11,6 +11,7 @@ RUN yum install -y git && \
 	yum install -y openssh-server && \
 	yum install -y java-1.8.0-openjdk && \
 	yum install -y sudo && \
+	yum install -y maven && \
 	yum clean all
 
 # gen dummy keys, centos doesn't autogen them like ubuntu does
