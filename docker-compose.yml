@@ -5,7 +5,7 @@ master:
  volumes_from:
   - data
  ports:
-  - "50000:50000"
+ - "50000:50000"
 nginx:
  build: jenkins-nginx
  ports:
@@ -20,9 +20,10 @@ slavedotnet:
  build: jenkins-dotnetcore-slave
 registry:
  image: registry:2
- ports: "127.0.0.1:5000:5000"
+ ports: 
+  - "127.0.0.1:5000:5000"
  environment:
-  REGISTRY_STORAGE=azure
-  REGISTRY_STORAGE_AZURE_ACCOUNTNAME="dockerblog"
-  REGISTRY_STORAGE_AZURE_ACCOUNTKEY="eqU1ugyKf9gQ4iEzdsUyPorL3pO9p1QpM1viEtxaEDR/gx2z7Lc/tuywn555Hde1Qr2Jo3rsHSr2LNj7C91T3A=="
-  REGISTRY_STORAGE_AZURE_CONTAINER="registry"
+  - REGISTRY_STORAGE=azure
+  - REGISTRY_STORAGE_AZURE_ACCOUNTNAME="dockerblog"
+  - REGISTRY_STORAGE_AZURE_ACCOUNTKEY="eqU1ugyKf9gQ4iEzdsUyPorL3pO9p1QpM1viEtxaEDR/gx2z7Lc/tuywn555Hde1Qr2Jo3rsHSr2LNj7C91T3A=="
+  - REGISTRY_STORAGE_AZURE_CONTAINER="registry"
