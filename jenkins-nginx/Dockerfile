@@ -136,8 +136,8 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 #Setup the Certs
 # Copy in the TLS certs, we'll use /usr/local/etc for them
-#COPY certs/cert.pem /etc/nginx/conf.d/cert.pem
-#COPY certs/key.pem /etc/nginx/conf.d/key.pem
+COPY certs/cert.pem /etc/nginx/conf.d/cert.pem
+COPY certs/key.pem /etc/nginx/conf.d/key.pem
 
 USER root
 
@@ -145,7 +145,6 @@ USER root
 #RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
 #RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
 #RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
-
 
 EXPOSE 80
 EXPOSE 443
