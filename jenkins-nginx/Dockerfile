@@ -128,8 +128,26 @@ RUN GPG_KEYS=B0F4253373F8F6F510D42178520A9993A1C052F8 \
 
 # Add default configuration
 COPY conf/jenkins.conf /etc/nginx/conf.d/jenkins.conf
+COPY conf/registry.conf /etc/nginx/conf.d/registry.conf
+COPY files/registry.password /etc/nginx/conf.d/registry.password
+							
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
+
+#Setup the Certs
+# Copy in the TLS certs, we'll use /usr/local/etc for them
+COPY certs/cert.pem /etc/nginx/conf.d/cert.pem
+COPY certs/key.pem /etc/nginx/conf.d/key.pem
+
+USER root
+
+# Make sure cert permissions are set correctly
+RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
+RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
+RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
+
+
 EXPOSE 80
+EXPOSE 443
 
 CMD ["nginx"]

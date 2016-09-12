@@ -10,6 +10,7 @@ nginx:
  build: jenkins-nginx
  ports:
   - "80:80"
+  - "5000:443"
  links:
   - master:jenkins-master
 slave:
