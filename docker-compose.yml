@@ -10,10 +10,19 @@ nginx:
  build: jenkins-nginx
  ports:
   - "80:80"
-  - "5000:443"
+  - "5043:443"
  links:
   - master:jenkins-master
+  - registry:registry
 slave:
  build: jenkins-slave
 slavedotnet:
  build: jenkins-dotnetcore-slave
+registry:
+ image: registry:2
+ ports: 1"27.0.0.1:5000:5000"
+ environment:
+  REGISTRY_STORAGE=azure
+  REGISTRY_STORAGE_AZURE_ACCOUNTNAME="dockerblog"
+  REGISTRY_STORAGE_AZURE_ACCOUNTKEY="eqU1ugyKf9gQ4iEzdsUyPorL3pO9p1QpM1viEtxaEDR/gx2z7Lc/tuywn555Hde1Qr2Jo3rsHSr2LNj7C91T3A=="
+  REGISTRY_STORAGE_AZURE_CONTAINER="registry"
