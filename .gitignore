@@ -24,8 +24,11 @@ Temporary Items
 .apdisk
 
 # Ignore all certs, keys, etc. 
-certs/*
+certs/
+files/
 authorized_keys
 *rsa
 *.pem
 *.key
+*.crt
+registry.password
