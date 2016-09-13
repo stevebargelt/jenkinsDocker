@@ -10,7 +10,7 @@ nginx:
  build: jenkins-nginx
  ports:
   - "80:80"
-  - "5043:443"
+  - "443:443"
  links:
   - master:jenkins-master
   - registry:registry
