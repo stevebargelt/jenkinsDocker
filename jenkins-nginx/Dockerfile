@@ -136,14 +136,14 @@ COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 #Setup the Certs
 # Copy in the TLS certs, we'll use /usr/local/etc for them
-COPY certs/cert.pem /etc/nginx/conf.d/cert.pem
-COPY certs/key.pem /etc/nginx/conf.d/key.pem
+COPY certs/cert.pem /etc/nginx/conf.d/server-cert.pem
+COPY certs/key.pem /etc/nginx/conf.d/server-key.pem
 
 USER root
 
 # Make sure cert permissions are set correctly
-RUN chmod +r /etc/nginx/conf.d/key.pem
-RUN chmod +r /etc/nginx/conf.d/cert.pem
+RUN chmod +r /etc/nginx/conf.d/server-key.pem
+RUN chmod +r /etc/nginx/conf.d/server-cert.pem
 
 EXPOSE 80
 EXPOSE 443
