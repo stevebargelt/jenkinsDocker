@@ -13,7 +13,7 @@ nginx:
   - "5043:443"
  links:
   - master:jenkins-master
-  - registry:jenkins-registry
+  - registry:registry
 slave:
  build: jenkins-slave
 slavedotnet:
@@ -21,7 +21,7 @@ slavedotnet:
 registry:
  image: registry:2
  ports: 
-  - "5000:5000"
+  - "127.0.0.1:5000:5000"
  environment:
   - REGISTRY_STORAGE=azure
   - REGISTRY_STORAGE_AZURE_ACCOUNTNAME="dockerblog"
