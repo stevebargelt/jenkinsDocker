@@ -14,9 +14,6 @@ nginx:
  links:
   - master:jenkins-master
   - registry:registry
-  - letsencrypt:letsencrypt
- volumes_from:
-  - letsencrypt
 slave:
  build: jenkins-slave
 slavedotnet:
@@ -30,15 +27,3 @@ registry:
   - REGISTRY_STORAGE_AZURE_ACCOUNTNAME="dockerblog"
   - REGISTRY_STORAGE_AZURE_ACCOUNTKEY="eqU1ugyKf9gQ4iEzdsUyPorL3pO9p1QpM1viEtxaEDR/gx2z7Lc/tuywn555Hde1Qr2Jo3rsHSr2LNj7C91T3A=="
   - REGISTRY_STORAGE_AZURE_CONTAINER="registry"
-letsencrypt:
-  image: quay.io/letsencrypt/letsencrypt:latest
-  command:  bash -c "sleep 6 && letsencrypt certonly --standalone -d harebrained-apps.com -d dockerblog.harebrained-apps.com --text --agree-tos --email steve@bargelt.com --server https://acme-v01.api.letsencrypt.org/directory --rsa-key-size 4096 --verbose --renew-by-default --standalone-supported-challenges http-01"
-  entrypoint: ""
-  volumes:
-    - /etc/letsencrypt
-    - /var/lib/letsencrypt
-  ports:
-    - "80"
-    - "443"
-  environment:
-    - TERM=xterm
