@@ -25,10 +25,10 @@ Temporary Items
 
 # Ignore all certs, keys, etc. 
 certs/
-files/
 authorized_keys
 *rsa
 *.pem
 *.key
 *.crt
+*.pfk
 registry.password
