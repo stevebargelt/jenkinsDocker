@@ -14,6 +14,8 @@ nginx:
  links:
   - master:jenkins-master
   - registry:registry
+ volumes:
+  - /etc/letsencrypt:/etc/letsencrypt
 slave:
  build: jenkins-slave
 slavedotnet:
