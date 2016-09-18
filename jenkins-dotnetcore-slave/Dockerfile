@@ -10,7 +10,7 @@ MAINTAINER Steve Bargelt
 ENV LTTNG_UST_REGISTER_TIMEOUT 0
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		openssh-server \
+#		openssh-server \
 		clang-3.5 \
         libc6 \
         libcurl3 \
@@ -48,30 +48,27 @@ RUN mkdir warmup \
     && cd .. \  
     && rm -rf warmup \
     && rm -rf /tmp/NuGetScratch
-# from docker site
-RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
-# # SSH login fix. Otherwise user is kicked off after login
-RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
-# # old one
-# Set SSH Configuration to allow remote logins without /proc write access
-# RUN sed -ri 's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' /etc/pam.d/sshd
+# from docker site
+#RUN sed -i 's/PermitRootLogin without-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+# # SSH login fix. Otherwise user is kicked off after login
+#RUN sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 # Create Jenkins User
 RUN useradd jenkins -m -s /bin/bash
 
 # Add public key for Jenkins login
-RUN mkdir /home/jenkins/.ssh
+#RUN mkdir /home/jenkins/.ssh
 
-COPY /files/authorized_keys /home/jenkins/.ssh/authorized_keys
+#COPY /files/authorized_keys /home/jenkins/.ssh/authorized_keys
 
-RUN mkdir /var/run/sshd
-RUN chmod 0755 /var/run/sshd
+#RUN mkdir /var/run/sshd
+#RUN chmod 0755 /var/run/sshd
 
 RUN chown -R jenkins /home/jenkins
 RUN chgrp -R jenkins /home/jenkins
-RUN chmod 600 /home/jenkins/.ssh/authorized_keys
-RUN chmod 700 /home/jenkins/.ssh
+#RUN chmod 600 /home/jenkins/.ssh/authorized_keys
+#RUN chmod 700 /home/jenkins/.ssh
 
 # Add the jenkins user to sudoers
 RUN echo "jenkins    ALL=(ALL)    ALL" >> etc/sudoers
@@ -80,5 +77,5 @@ RUN echo "jenkins    ALL=(ALL)    ALL" >> etc/sudoers
 COPY /files/resolv.conf /etc/resolv.conf
 
 # Expose SSH port and run SSHD
-EXPOSE 22
-CMD ["/usr/sbin/sshd","-D"]
+#EXPOSE 22
+#CMD ["/usr/sbin/sshd","-D"]
