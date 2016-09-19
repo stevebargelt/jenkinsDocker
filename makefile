@@ -5,9 +5,9 @@ run:
 stop:
 	@docker-compose -p jenkins stop
 clean:	stop
-	@docker-compose -p jenkins rm master nginx registry
+	@docker-compose -p jenkins rm master nginx #registry
 clean-data: clean
 	@docker-compose -p jenkins rm -v data
 clean-images:
-	@docker rmi `docker images -q -f "dangling=true"`
+	@docker rmi 'docker images -q -f "dangling=true"'
 

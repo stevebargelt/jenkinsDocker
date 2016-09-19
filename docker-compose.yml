@@ -6,6 +6,15 @@ master:
   - data
  ports:
  - "50000:50000"
+# registry:
+#  image: registry:2
+#  ports: 
+#   - "5000:5000"
+#  environment:
+#   - REGISTRY_STORAGE=azure
+#   - REGISTRY_STORAGE_AZURE_ACCOUNTNAME=""
+#   - REGISTRY_STORAGE_AZURE_ACCOUNTKEY=""
+#   - REGISTRY_STORAGE_AZURE_CONTAINER="registry"
 nginx:
  build: jenkins-nginx
  ports:
@@ -13,19 +22,10 @@ nginx:
   - "443:443"
  links:
   - master:jenkins-master
-  - registry:registry
+  # - registry:registry
  volumes:
   - /etc/letsencrypt:/etc/letsencrypt
 slave:
  build: jenkins-slave
 slavedotnet:
  build: jenkins-dotnetcore-slave
-registry:
- image: registry:2
- ports: 
-  - "5000:5000"
- environment:
-  - REGISTRY_STORAGE=azure
-  - REGISTRY_STORAGE_AZURE_ACCOUNTNAME="dockerblog"
-  - REGISTRY_STORAGE_AZURE_ACCOUNTKEY="eqU1ugyKf9gQ4iEzdsUyPorL3pO9p1QpM1viEtxaEDR/gx2z7Lc/tuywn555Hde1Qr2Jo3rsHSr2LNj7C91T3A=="
-  - REGISTRY_STORAGE_AZURE_CONTAINER="registry"
