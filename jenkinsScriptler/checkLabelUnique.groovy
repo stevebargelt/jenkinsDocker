@@ -13,10 +13,10 @@ import com.github.kostyasha.yad.launcher.DockerComputerJNLPLauncher;
 import com.github.kostyasha.yad.strategy.DockerOnceRetentionStrategy;
 
 // In Jenkins copy/paste this script into the Scriptler interface. 
-// Name: getLabels
+// Name: checkLabelUnique
 // Add parameter:
 //		cloudName
-//    labelName
+//    	label
 
 // Let's find the cloud!
 def myCloud = Jenkins.instance.getInstance().getCloud(cloudName);
@@ -39,4 +39,4 @@ templates.each { template ->
 }
 uniqueLabels.unique()
 
-return uniqueLabels
+return uniqueLabels.contains( label )
