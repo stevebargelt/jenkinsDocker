@@ -12,8 +12,7 @@ The outcomes or user stories. I approached this from two roles...
 
 >As a software developer I want to control my own build environments by creating my own build jobs and CI/CD pipelines so that I can control the flow of the software I write from my machine all the way through to production without impediments like having to open a ticket or rely on other teams.
 
-Jenkins will be our CI/CD pipeline manager and it will spin up ephemeral slave nodes when needed. What I mean by that is Jenkins will spin up Docker containers as build environments that only get started when a build job needs them, so if you need a Java build environment or a DotNetcore environment, Jenkins will start a Docker container to handle your build and then destroy that node/container when the build is complete.
-
+Jenkins will be our CI/CD pipeline manager and it will spin up ephemeral slave nodes when needed. What I mean by that is Jenkins will spin up Docker containers as build environments that only get started when a build job needs them, so if you need a Java build environment or a DotNetcore environment, Jenkins will start a Docker container to handle your build and then remove that node/container when the build is complete.
 
 ## The Tutorials
 * [Automated Build System Part 0: Intro](http://bargelt.com/blog/2016/10/06/automated-build-system-docker-jenkins-azure-go-intro/)
