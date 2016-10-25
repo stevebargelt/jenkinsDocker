@@ -5,7 +5,7 @@ This code accompanies a series of tutorials where I show you how to create an en
 
 It includes Dockerfile image definitions for all of the images and ultimately containers we need to run our system. It also contains scripts and other configuration artifacts to get our system up and running.  
 
-## What are we trying to accomplis? The Outcomes
+## What are we trying to accomplish? The Outcomes
 The outcomes or user stories. I approached this from two roles... 
 
 >As a build engineer I don't want to process tickets to create build environments, build jobs, or CI/CD pipelines for software teams so that I have time to concentrate on keeping our build infrastructure healthy and have time to research and implement forward-thinking solutions for software teams to utilize. 
