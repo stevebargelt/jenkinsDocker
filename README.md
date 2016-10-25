@@ -10,7 +10,16 @@ The outcomes or user stories. I approached this from two roles...
 
 >As a build engineer I don't want to process tickets to create build environments, build jobs, or CI/CD pipelines for software teams so that I have time to concentrate on keeping our build infrastructure healthy and have time to research and implement forward-thinking solutions for software teams to utilize. 
 
+
 >As a software developer I want to control my own build environments by creating my own build jobs and CI/CD pipelines so that I can control the flow of the software I write from my machine all the way through to production without impediments like having to open a ticket or rely on other teams.
+
+We will accomplish both of these outcomes and when we are done the process will look something like this:
+
+* software developer (or team) creates a Docker image for the build environment (and presumably uses it locally). 
+* Dev writes tests and code. 
+* Dev adds a text file to code repository that contains the Jenkins pipleline script. 
+* Dev pushes the image to the organization's private Docker registry. 
+* Dev then uses a tool (currently command line that I've dubbed Dockhand) to create the buildjob/CI/CD pipeline. 
 
 Jenkins will be our CI/CD pipeline manager and it will spin up ephemeral slave nodes when needed. What I mean by that is Jenkins will spin up Docker containers as build environments that only get started when a build job needs them, so if you need a Java build environment or a DotNetcore environment, Jenkins will start a Docker container to handle your build and then remove that node/container when the build is complete.
 
