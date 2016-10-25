@@ -1,5 +1,5 @@
 build:
-	@docker-compose -p jenkins build 
+	@docker-compose -p jenkins build nginx data master slave
 run:
 	@docker-compose -p jenkins up -d nginx data master
 stop:
@@ -10,4 +10,3 @@ clean-data: clean
 	@docker-compose -p jenkins rm -v data
 clean-images:
 	@docker rmi 'docker images -q -f "dangling=true"'
-
