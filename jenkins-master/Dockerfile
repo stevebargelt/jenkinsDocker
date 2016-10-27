@@ -100,12 +100,6 @@ COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 
-# Copy in the Docker certs, we'll use /usr/local/etc for them
-COPY certs/ca-key.pem /usr/local/etc/jenkins/certs/ca-key.pem
-COPY certs/ca.pem /usr/local/etc/jenkins/certs/ca.pem
-COPY certs/cert.pem /usr/local/etc/jenkins/certs/cert.pem
-COPY certs/key.pem /usr/local/etc/jenkins/certs/key.pem
-
 USER root
 
 # Make sure cert permissions are set correctly
