@@ -102,12 +102,10 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 
 USER root
 
-# Make sure cert permissions are set correctly
+# Make sure permissions are set correctly
 RUN chmod +x /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/jenkins.sh
-RUN chmod +r /usr/local/etc/jenkins/certs/ca.pem
-RUN chmod +r /usr/local/etc/jenkins/certs/cert.pem
 RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 
 # Switch to the jenkins user
