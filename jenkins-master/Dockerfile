@@ -106,7 +106,6 @@ USER root
 RUN chmod +x /usr/local/bin/jenkins-support
 RUN chmod +x /usr/local/bin/install-plugins.sh
 RUN chmod +x /usr/local/bin/jenkins.sh
-RUN chown -R jenkins:jenkins /usr/local/etc/jenkins
 
 # Switch to the jenkins user
 USER ${JENKINS_USER}
