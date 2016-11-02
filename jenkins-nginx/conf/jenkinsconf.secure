@@ -1,7 +1,3 @@
-#upstream jenkins-master {
-#  server master:8080;
-#}
-
 server {
 listen 443;
   server_name dockerbuild.harebrained-apps.com;
