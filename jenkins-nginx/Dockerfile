@@ -133,8 +133,6 @@ COPY conf/jenkins.conf /etc/nginx/conf.d/jenkins.conf
 							
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
-USER root
-
 EXPOSE 80
 #EXPOSE 443
 
