@@ -16,13 +16,16 @@ From executing a `$ docker inspect jenkin_data_1` we see that this container has
             },
 ```
 
+Build the iamge:
+
+```
+$ docker build -t jenkins_backup .
+```
+
 Launch `jenkins-backup` container with the following flags:
 
 ```
-$ docker run --rm \
---env-file env.txt \
---volumes-from jenkins_data_1 \
---name jenkins_backup_1 .
+$ docker run --rm --env-file env.txt --volumes-from jenkins_data_1 --name jenkins_backup_1 jenkins_backup
 ```
 The key being the `--volumes-from` flag, this links cvolumes from jenkins_data_1 so that this container can backup the volumes from the linked container. Restore will restore to these volumes as well. 
 
