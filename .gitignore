@@ -32,3 +32,4 @@ authorized_keys
 *.crt
 *.pfk
 registry.password
+env.txt
