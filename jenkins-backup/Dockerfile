@@ -2,7 +2,7 @@ FROM microsoft/azure-cli
 MAINTAINER steve@bargelt.com
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-		cronie \
+		cron \
 	&& rm -rf /var/lib/apt/lists/*
 
 ADD backup.sh /backup.sh
