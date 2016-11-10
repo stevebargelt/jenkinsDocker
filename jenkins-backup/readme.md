@@ -40,4 +40,10 @@ PATHS_TO_BACKUP=/var/log/jenkins /var/jenkins_home
 RESTORE=false
 ```
 
-To perform a restore launch the container with the RESTORE variable set to true
+if you add a `CRON_TIME` entry to env.txt like `CRON_TIME=30 2 * * *` (every day at 2:30AM ) you should run the container detached `-d`(in which case you can't use the `-rm` option... 
+
+```
+$ docker run -d --env-file env.txt --volumes-from jenkins_data_1 --name jenkins_backup_1 jenkins_backup
+```
+
+To perform a restore launch the container with the RESTORE variable set to true. This will restore THE LAST back to the container. 
