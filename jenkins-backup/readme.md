@@ -22,10 +22,11 @@ Launch `jenkins-backup` container with the following flags:
 $ docker run --rm \
 --env-file env.txt \
 --volumes-from jenkins_data_1 \
---name dockup .
+--name jenkins_backup_1 .
 ```
+The key being the `--volumes-from` flag, this links cvolumes from jenkins_data_1 so that this container can backup the volumes from the linked container. Restore will restore to these volumes as well. 
 
-The contents of `env.txt` being:
+The contents of `env.txt` are:
 
 ```
 AZURE_STORAGE_ACCOUNT=<<storage account name>>
