@@ -24,7 +24,7 @@ RUN yum install -y git && \
 RUN useradd jenkins -m -s /bin/bash
 
 # Add public key for Jenkins login
-RUN mkdir /home/jenkins/.ssh
+#RUN mkdir /home/jenkins/.ssh
 
 #COPY /files/authorized_keys /home/jenkins/.ssh/authorized_keys
 
