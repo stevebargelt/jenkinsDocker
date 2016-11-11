@@ -1,8 +1,8 @@
-FROM centos:7
+FROM gliderlabs/alpine:3.4
 MAINTAINER Steve Bargelt
 
-# Create the jenkins user
-RUN useradd -d "/var/jenkins_home" -u 1000 -m -s /bin/bash jenkins
+# add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
+RUN addgroup jenkins && adduser -h "/var/jenkins_home" -u 1000 -s /bin/bash -D -G jenkins jenkins
 
 # Create the folders and volume mount points
 RUN mkdir -p /var/log/jenkins
