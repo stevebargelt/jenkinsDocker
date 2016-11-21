@@ -1,2 +1,3 @@
 jclouds-jenkins
 yet-another-docker-plugin
+docker-workflow
