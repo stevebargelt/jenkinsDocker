@@ -1,62 +1,73 @@
-FROM openjdk:8-jdk 
-# ^^ openjdk:8-jdk  ^^ is based on buildpack-deps:jessie-scm just like...
-# microsoft/dotnet:latest is
-MAINTAINER Steve Bargelt
+FROM microsoft/aspnetcore-build:1.0.1
 
-# Work around https://github.com/dotnet/cli/issues/1582 until Docker releases a
-# fix (https://github.com/docker/docker/issues/20818). This workaround allows
-# the container to be run with the default seccomp Docker settings by avoiding
-# the restart_syscall made by LTTng which causes a failed assertion.
-ENV LTTNG_UST_REGISTER_TIMEOUT 0
-
+# This is FROM openjdk:8-jdk  
 RUN apt-get update && apt-get install -y --no-install-recommends \
-#		openssh-server \
-		clang-3.5 \
-        libc6 \
-        libcurl3 \
-        libgcc1 \
-        libicu52 \
-        liblttng-ust0 \
-        libssl1.0.0 \
-        libstdc++6 \
-        libtinfo5 \
-        libunwind8 \
-        libuuid1 \
-        zlib1g \			
+		bzip2 \
+		unzip \
+		xz-utils \
+                apt-transport-https \
 	&& rm -rf /var/lib/apt/lists/*
 
-# Install .NET Core SDK
+RUN echo 'deb http://deb.debian.org/debian jessie-backports main' > /etc/apt/sources.list.d/jessie-backports.list
+RUN echo 'deb https://apt.dockerproject.org/repo debian-jessie main' > /etc/apt/sources.list.d/docker.list
 
-ENV DOTNET_SDK_VERSION 1.0.0-preview2-003121
-ENV DOTNET_SDK_DOWNLOAD_URL https://dotnetcli.blob.core.windows.net/dotnet/preview/Binaries/$DOTNET_SDK_VERSION/dotnet-dev-win-x64.$DOTNET_SDK_VERSION.zip
+# Default to UTF-8 file.encoding
+ENV LANG C.UTF-8
 
-# Install .NET Core SDK
-ENV DOTNET_SDK_VERSION 1.0.0-preview2-003121
-ENV DOTNET_SDK_DOWNLOAD_URL https://dotnetcli.blob.core.windows.net/dotnet/preview/Binaries/$DOTNET_SDK_VERSION/dotnet-dev-debian-x64.$DOTNET_SDK_VERSION.tar.gz
+# add a simple script that can auto-detect the appropriate JAVA_HOME value
+# based on whether the JDK or only the JRE is installed
+RUN { \
+		echo '#!/bin/sh'; \
+		echo 'set -e'; \
+		echo; \
+		echo 'dirname "$(dirname "$(readlink -f "$(which javac || which java)")")"'; \
+	} > /usr/local/bin/docker-java-home \
+	&& chmod +x /usr/local/bin/docker-java-home
 
-RUN curl -SL $DOTNET_SDK_DOWNLOAD_URL --output dotnet.tar.gz \
-    && mkdir -p /usr/share/dotnet \
-    && tar -zxf dotnet.tar.gz -C /usr/share/dotnet \
-    && rm dotnet.tar.gz \
-    && ln -s /usr/share/dotnet/dotnet /usr/bin/dotnet
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64
 
-# Trigger the population of the local package cache  
-ENV NUGET_XMLDOC_MODE skip  
-RUN mkdir warmup \  
-    && cd warmup \  
-    && dotnet new \  
-    && cd .. \  
-    && rm -rf warmup \
-    && rm -rf /tmp/NuGetScratch
+ENV JAVA_VERSION 8u111
+ENV JAVA_DEBIAN_VERSION 8u111-b14-2~bpo8+1
+
+# see https://bugs.debian.org/775775
+# and https://github.com/docker-library/java/issues/19#issuecomment-70546872
+ENV CA_CERTIFICATES_JAVA_VERSION 20140324
+
+RUN set -x \
+	&& apt-get update \
+	&& apt-get install -y \
+		openjdk-8-jdk="$JAVA_DEBIAN_VERSION" \
+		ca-certificates-java="$CA_CERTIFICATES_JAVA_VERSION" \
+	&& rm -rf /var/lib/apt/lists/* \
+	&& [ "$JAVA_HOME" = "$(docker-java-home)" ]
+
+# see CA_CERTIFICATES_JAVA_VERSION notes above
+RUN /var/lib/dpkg/info/ca-certificates-java.postinst configure
+
+##### END OF THE JDK
+
+##### START Jenkins Slave Node Config settings
 
 # Create Jenkins User
 RUN useradd jenkins -m -s /bin/bash
 
 RUN chown -R jenkins /home/jenkins
 RUN chgrp -R jenkins /home/jenkins
+RUN chown -R jenkins /tmp
+RUN chgrp -R jenkins /tmp
 
 # Add the jenkins user to sudoers
 RUN echo "jenkins    ALL=(ALL)    ALL" >> etc/sudoers
 
-# Set Name Servers
-COPY /files/resolv.conf /etc/resolv.conf
+# Must install docker to create docker images from docker container. Inception. Head... hurts.
+# container must be called with -v /var/run/docker.sock:/var/run/docker.sock
+RUN apt-get install -y --no-install-recommends apt-transport-https ca-certificates
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
+RUN apt-get update && apt-get install -y --no-install-recommends \
+	docker-engine \
+&& rm -rf /var/lib/apt/lists/*
+
+# This must run after the docker install 
+RUN gpasswd -a jenkins docker
+
+USER jenkins
