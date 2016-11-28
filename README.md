@@ -30,8 +30,11 @@ Jenkins will be our CI/CD pipeline manager and it will spin up ephemeral slave n
 * [Automated Build System Part 0: Intro](http://bargelt.com/blog/2016/10/06/automated-build-system-docker-jenkins-azure-go-intro/)
 * [Automated Build System Part 1: Docker on Linux in Azure](http://bargelt.com/blog/2016/10/07/automated-build-system-docker-in-azure/
 )
+* [Automated Build System Part 1.5: Docker in a VM in Azure via Azure CLI](http://bargelt.com/blog/2016/11/01/build-system-azure-cli/)
+* [Automated Build System Part 1.75: Docker in a VM in Azure via shell scripts and the Azure CLI](http://bargelt.com/blog/2016/11/28/abs-azure-docker-vm-setup-scripts/) 
+* [Automated Build System Part 2: Custom Jenkins Container and Ephemeral Slave Nodes](http://bargelt.com/blog/2016/10/31/automated-build-system-part-custom-containers/)
 
 ## Other Artifacts
 * [Tutorial Videos](http://sbarg.me/ABS-tuts)
-* [Intro Slides](http://sbarg.me/ABS-tuts)
+* [Intro Slides](http://sbarg.me/ABS-slides)
 * [Dockhand](https://github.com/stevebargelt/Dockhand)
