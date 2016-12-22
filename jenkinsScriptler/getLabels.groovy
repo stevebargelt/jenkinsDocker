@@ -16,7 +16,6 @@ import com.github.kostyasha.yad.strategy.DockerOnceRetentionStrategy;
 // Name: getLabels
 // Add parameter:
 //		cloudName
-//    labelName
 
 // Let's find the cloud!
 def myCloud = Jenkins.instance.getInstance().getCloud(cloudName);
