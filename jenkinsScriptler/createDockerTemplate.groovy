@@ -36,7 +36,7 @@ if (image == "") {
   return false
 }
 
-def launcher = new DockerComputerJNLPLauncher(new JNLPLauncher());
+def launcher = new DockerComputerJNLPLauncher();
 launcher.setUser("jenkins");
 launcher.setLaunchTimeout(60);
 
