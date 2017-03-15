@@ -48,8 +48,12 @@ def removeContainer = new DockerRemoveContainer();
 removeContainer.setRemoveVolumes(true);
 removeContainer.setForce(true);
 
-// Container details
 def createContainer = new DockerCreateContainer();
+
+//allows Slaves to reference the host Docker to run Docker in Docker
+//Inception. Nuff said.
+def volumeList = ["/var/run/docker.sock:/var/run/docker.sock"]
+createContainer.setVolumes(volumeList);
 
 //lifecycle
 def containerLifecycle = new DockerContainerLifecycle();
