@@ -1,0 +1,24 @@
+[Unit]
+Description=Dockerized Automated Build System
+After=docker.service
+BindsTo=docker.service
+Conflicts=shutdown.target reboot.target halt.target
+
+[Service]
+Environment=APP='jenkins'
+TimeoutStartSec=0
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+WorkingDirectory=/home/absadmin/jenkinsDocker/
+
+ExecStartPre=-/usr/bin/docker-compose -f docker-compose.yml -p $APP kill
+ExecStartPre=-/usr/bin/docker-compose -f docker-compose.yml -p $APP rm master nginx registry
+ExecStart=/usr/local/bin/docker-compose -f docker-compose.yml -p $APP up nginx data master registry
+
+ExecStop=/usr/local/bin/docker-compose -f docker-compose.yml -p $APP stop
+
+NotifyAccess=all
+
+[Install]
+WantedBy=multi-user.target
