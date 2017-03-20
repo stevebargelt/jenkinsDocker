@@ -10,7 +10,7 @@ TimeoutStartSec=0
 TimeoutStopSec=30
 Restart=always
 RestartSec=10
-WorkingDirectory=/home/absadmin/jenkinsDocker/
+WorkingDirectory=/home/dockeruser/jenkinsDocker/
 
 ExecStartPre=-/usr/bin/docker-compose -f docker-compose.yml -p $APP kill
 ExecStartPre=-/usr/bin/docker-compose -f docker-compose.yml -p $APP rm master nginx registry
