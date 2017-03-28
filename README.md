@@ -1,4 +1,4 @@
-# Automated Build System
+# Automated Build System - The Hard Way
 
 ## Introduction 
 This code accompanies a series of tutorials where I show you how to create an entire Automated Build System (ABS) step-by-step, from scratch using Docker, Jenkins and Go - hosted in Azure. 
@@ -33,6 +33,10 @@ Jenkins will be our CI/CD pipeline manager and it will spin up ephemeral slave n
 * [Automated Build System Part 1.5: Docker in a VM in Azure via Azure CLI](http://bargelt.com/blog/2016/11/01/build-system-azure-cli/)
 * [Automated Build System Part 1.75: Docker in a VM in Azure via shell scripts and the Azure CLI](http://bargelt.com/blog/2016/11/28/abs-azure-docker-vm-setup-scripts/) 
 * [Automated Build System Part 2: Custom Jenkins Container and Ephemeral Slave Nodes](http://bargelt.com/blog/2016/10/31/automated-build-system-part-custom-containers/)
+* [Part 3: Secure Private Docker Registry in Azure and Securing Jenkins](http://bargelt.com/blog/2016/12/05/build-system-secure-docker-registry-in-azure/)
+* [Part 4: Scripting Jenkins and the Jenkins API](http://bargelt.com/blog/2017/03/27/abs-04-scripting-jenkins/)
+
+* Part 5: A sample ASP.Net Core App - Manual Build System Use
 
 ## Other Artifacts
 * [Tutorial Videos](http://sbarg.me/ABS-tuts)
