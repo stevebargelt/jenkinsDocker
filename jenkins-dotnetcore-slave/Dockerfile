@@ -1,5 +1,7 @@
 FROM microsoft/aspnetcore-build:1.0.1
 
+ENV DOTNET_SKIP_FIRST_TIME_EXPERIENCE 1
+
 # This is FROM openjdk:8-jdk  
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		bzip2 \
