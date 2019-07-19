@@ -33,3 +33,4 @@ authorized_keys
 *.pfk
 registry.password
 env.txt
+backup/

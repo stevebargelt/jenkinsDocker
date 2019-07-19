@@ -1,6 +1,5 @@
 FROM alpine:3.4
-
-MAINTAINER Steve Bargelt
+LABEL maintainer="steve@bargelt.com"
 
 ENV NGINX_VERSION 1.10.1
 
