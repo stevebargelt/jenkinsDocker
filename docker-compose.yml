@@ -14,7 +14,7 @@ services:
   ports:
    - "80:80"
    - "443:443"
-   networks:
+  networks:
     - jenkins-net
   volumes:
    - /etc/letsencrypt:/etc/letsencrypt
@@ -27,7 +27,4 @@ volumes:
   jenkinshome:
 networks:
  jenkins-net:
-
-
-
 
