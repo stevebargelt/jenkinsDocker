@@ -9,6 +9,7 @@ services:
    - "50000:50000"
   networks:
    - jenkins-net
+  restart: unless-stopped
  nginx:
   build: jenkins-nginx/.
   ports:
@@ -18,6 +19,7 @@ services:
     - jenkins-net
   volumes:
    - /etc/letsencrypt:/etc/letsencrypt
+  restart: unless-stopped
  slave:
   build: jenkins-slave
  slavedotnet:
@@ -27,4 +29,3 @@ volumes:
   jenkinshome:
 networks:
  jenkins-net:
-
