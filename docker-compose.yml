@@ -1,5 +1,6 @@
 version: '3.4'
 services:
+ #Jenkins Master
  master:
   build: jenkins-master/.
   volumes:
@@ -7,25 +8,24 @@ services:
    - jenkinshome:/var/jenkins_home
   ports:
    - "50000:50000"
-  networks:
-   - jenkins-net
   restart: unless-stopped
+ #Main NGINX Instance - Ingress point
  nginx:
   build: jenkins-nginx/.
   ports:
    - "80:80"
    - "443:443"
-  networks:
-    - jenkins-net
   volumes:
    - /etc/letsencrypt:/etc/letsencrypt
   restart: unless-stopped
+ 
  slave:
   build: jenkins-slave
+ 
  slavedotnet:
   build: jenkins-dotnetcore-slave
+
 volumes:
   jenkinslog:
   jenkinshome:
-networks:
- jenkins-net:
+
